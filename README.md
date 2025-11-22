@@ -1,4 +1,4 @@
-
+<<<<<<< HEAD
 # Admin Panel - Full Stack Application
 
 A complete admin panel with user management, authentication, and dashboard features.
@@ -154,4 +154,8 @@ Admin_Panel/
 
 ## License
 
-
+This project is licensed under the ISC License.
+=======
+# Admin_Panal
+This is real Project
+>>>>>>> 2dac549dffdd215f9240fffca930a2689d428bcf

@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import { MdAdd, MdEdit, MdDelete, MdLocalDrink, MdCoffee, MdFastfood, MdLiquor, MdLabel, MdFolder, MdAttachMoney, MdInventory, MdScale, MdAssignment, MdDescription, MdCheckCircle, MdCancel, MdBlock, MdFileDownload, MdNavigateBefore, MdNavigateNext } from "react-icons/md";
+import { MdAdd, MdEdit, MdDelete, MdLocalDrink, MdCoffee, MdFastfood, MdLiquor, MdLabel, MdFolder, MdAttachMoney, MdInventory, MdScale, MdAssignment, MdDescription, MdCheckCircle, MdCancel, MdBlock, MdFileDownload, MdNavigateBefore, MdNavigateNext, MdPictureAsPdf } from "react-icons/md";
 import Swal from "sweetalert2";
 import { productApi } from "../api/productApi";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import "./Products.css";
 
 export default function Products() {
@@ -134,6 +136,8 @@ export default function Products() {
     setShowForm(false);
   };
 
+
+  // download sheet
   const downloadExcel = () => {
     const csvContent = "data:text/csv;charset=utf-8," + 
       "Name,Category,Price,Stock,Unit,Description,Status\n" +
@@ -148,6 +152,38 @@ export default function Products() {
     document.body.removeChild(link);
   };
 
+
+  // download pdf
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+    
+    doc.setFontSize(20);
+    doc.text('Products Report', 14, 22);
+    
+    doc.setFontSize(10);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 30);
+    
+    const tableData = products.map(product => [
+      product.name,
+      product.category,
+      `₹${product.price}`,
+      product.stock,
+      product.unit,
+      product.description || '',
+      product.status
+    ]);
+    
+    doc.autoTable({
+      head: [['Name', 'Category', 'Price', 'Stock', 'Unit', 'Description', 'Status']],
+      body: tableData,
+      startY: 35,
+      styles: { fontSize: 8 },
+      headStyles: { fillColor: [102, 126, 234] }
+    });
+    
+    doc.save('products_report.pdf');
+  };
+
   const totalPages = Math.ceil(products.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentProducts = products.slice(startIndex, startIndex + itemsPerPage);
@@ -159,6 +195,9 @@ export default function Products() {
         <div className="header-actions">
           <button onClick={downloadExcel} className="download-btn">
             <MdFileDownload /> Download Excel
+          </button>
+          <button onClick={downloadPDF} className="download-btn pdf-btn">
+            <MdPictureAsPdf /> Download PDF
           </button>
           <button onClick={() => setShowForm(true)} className="add-product-btn">
             <MdAdd /> Add New Product
