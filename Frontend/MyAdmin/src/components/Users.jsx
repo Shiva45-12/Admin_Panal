@@ -9,7 +9,6 @@ export default function Users({ onDataChange }) {
   const { token } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -78,7 +77,6 @@ export default function Users({ onDataChange }) {
       role: user.role,
       status: user.status
     });
-    setShowForm(true);
   };
 
   const handleDelete = async (userId) => {
@@ -135,7 +133,6 @@ export default function Users({ onDataChange }) {
   const resetForm = () => {
     setFormData({ name: '', email: '', role: 'user', status: 'active' });
     setEditingUser(null);
-    setShowForm(false);
   };
 
   const downloadExcel = () => {
@@ -164,76 +161,13 @@ export default function Users({ onDataChange }) {
         <h2>User Management</h2>
         <div className="header-actions">
           <button onClick={downloadExcel} className="download-btn">
-            <MdFileDownload /> Download Excel
+            <MdFileDownload /> Download List
           </button>
-          <button onClick={() => setShowForm(true)} className="add-user-btn">
-            <span>+</span> Add New User
-          </button>
+
         </div>
       </div>
 
-      {showForm && (
-        <div className="user-form-overlay">
-          <div className="user-form-modal">
-            <div className="form-header">
-              <h3>{editingUser ? 'Edit User' : 'Add New User'}</h3>
-              <button className="close-form-btn" onClick={resetForm}>✕</button>
-            </div>
-            <form onSubmit={handleSubmit} className="modern-form">
-              <div className="form-grid">
-                <div className="input-group">
-                  <label>Full Name</label>
-                  <input
-                    type="text"
-                    placeholder="Enter full name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    required
-                  />
-                </div>
-                <div className="input-group">
-                  <label>Email Address</label>
-                  <input
-                    type="email"
-                    placeholder="Enter email address"
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    required
-                  />
-                </div>
-                <div className="input-group">
-                  <label>User Role</label>
-                  <select
-                    value={formData.role}
-                    onChange={(e) => setFormData({...formData, role: e.target.value})}
-                  >
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </div>
-                <div className="input-group">
-                  <label>Account Status</label>
-                  <select
-                    value={formData.status}
-                    onChange={(e) => setFormData({...formData, status: e.target.value})}
-                  >
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                  </select>
-                </div>
-              </div>
-              <div className="form-actions">
-                <button type="button" className="cancel-btn" onClick={resetForm}>
-                  Cancel
-                </button>
-                <button type="submit" className="submit-btn">
-                  {editingUser ? 'Update User' : 'Create User'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+
 
       <div className="users-table">
         <table>
@@ -299,6 +233,68 @@ export default function Users({ onDataChange }) {
           Next <MdNavigateNext />
         </button>
       </div>
+
+      {/* Edit User Modal */}
+      {editingUser && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h3>Edit User</h3>
+              <button onClick={resetForm} className="close-btn">
+                ×
+              </button>
+            </div>
+            <form onSubmit={handleSubmit} className="user-form">
+              <div className="form-group">
+                <label>Name:</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Email:</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Role:</label>
+                <select
+                  value={formData.role}
+                  onChange={(e) => setFormData({...formData, role: e.target.value})}
+                >
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Status:</label>
+                <select
+                  value={formData.status}
+                  onChange={(e) => setFormData({...formData, status: e.target.value})}
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+              <div className="form-actions">
+                <button type="button" onClick={resetForm} className="cancel-btn">
+                  Cancel
+                </button>
+                <button type="submit" className="submit-btn">
+                  Update User
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

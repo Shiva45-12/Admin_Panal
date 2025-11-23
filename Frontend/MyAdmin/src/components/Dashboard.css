@@ -157,7 +157,7 @@
 
 .dashboard-header {
   background: white;
-  padding: 20px;
+  padding: 10px 20px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   display: flex;
   justify-content: space-between;
@@ -197,6 +197,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
+  margin-right: -70px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -495,6 +496,26 @@
 
 .stat-icon.payment {
   background: #fd7e14;
+}
+
+.stat-icon.category {
+  background: #6f42c1;
+}
+
+.stat-icon.product {
+  background: #20c997;
+}
+
+.stat-icon.order {
+  background: #fd7e14;
+}
+
+.stat-icon.delivery {
+  background: #17a2b8;
+}
+
+.stat-icon.store {
+  background: #ffc107;
 }
 
 .stat-info h3 {

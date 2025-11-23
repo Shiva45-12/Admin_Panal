@@ -252,9 +252,7 @@ export default function Orders() {
           <button onClick={() => setShowForm(true)} className="add-order-btn">
             <MdAdd /> Add New Order
           </button>
-          <button onClick={() => setShowDeliveryForm(true)} className="add-delivery-btn">
-            <MdDeliveryDining /> Add Delivery Boy
-          </button>
+
         </div>
       </div>
 
@@ -362,58 +360,7 @@ export default function Orders() {
         </div>
       )}
 
-      {showDeliveryForm && (
-        <div className="order-form-overlay">
-          <div className="order-form-modal">
-            <div className="form-header">
-              <h3>{editingDeliveryBoy ? 'Edit Delivery Boy' : 'Add New Delivery Boy'}</h3>
-              <button className="close-form-btn" onClick={resetDeliveryForm}>✕</button>
-            </div>
-            <form onSubmit={handleDeliverySubmit} className="modern-form">
-              <div className="form-grid">
-                <div className="input-group">
-                  <label>Name</label>
-                  <input
-                    type="text"
-                    placeholder="Enter delivery boy name"
-                    value={deliveryFormData.name}
-                    onChange={(e) => setDeliveryFormData({...deliveryFormData, name: e.target.value})}
-                    required
-                  />
-                </div>
-                <div className="input-group">
-                  <label>Phone Number</label>
-                  <input
-                    type="tel"
-                    placeholder="Enter phone number"
-                    value={deliveryFormData.phone}
-                    onChange={(e) => setDeliveryFormData({...deliveryFormData, phone: e.target.value})}
-                    required
-                  />
-                </div>
-                <div className="input-group">
-                  <label>Status</label>
-                  <select
-                    value={deliveryFormData.status}
-                    onChange={(e) => setDeliveryFormData({...deliveryFormData, status: e.target.value})}
-                  >
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                  </select>
-                </div>
-              </div>
-              <div className="form-actions">
-                <button type="button" className="cancel-btn" onClick={resetDeliveryForm}>
-                  Cancel
-                </button>
-                <button type="submit" className="submit-btn">
-                  {editingDeliveryBoy ? 'Update Delivery Boy' : 'Add Delivery Boy'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+
       
       <div className="orders-table-wrapper">
         {/* <div className="mobile-scroll-hint">← Scroll horizontally to see all columns →</div> */}
@@ -489,51 +436,7 @@ export default function Orders() {
         </button>
       </div>
 
-      <div className="delivery-boys-section">
-        <h3><MdDeliveryDining /> Delivery Boys</h3>
-        <div className="delivery-boys-table-wrapper">
-          {/* <div className="mobile-scroll-hint">← Scroll horizontally to see all columns →</div> */}
-          <div className="delivery-boys-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Phone</th>
-                  <th>Status</th>
-                  <th>Orders Delivered</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {deliveryBoys.map((boy) => (
-                  <tr key={boy.id}>
-                    <td>#{boy.id}</td>
-                    <td>{boy.name}</td>
-                    <td>{boy.phone}</td>
-                    <td>
-                      <span className={`status ${boy.status}`}>
-                        {boy.status}
-                      </span>
-                    </td>
-                    <td>{boy.orders}</td>
-                    <td>
-                      <div className="actions-container vertical">
-                        <button onClick={() => handleEditDeliveryBoy(boy)} className="action-btn edit-btn" title="Edit">
-                          <MdEdit style={{fontSize: '16px'}} />
-                        </button>
-                        <button onClick={() => handleDeleteDeliveryBoy(boy.id)} className="action-btn delete-btn" title="Delete">
-                          <MdDelete style={{fontSize: '16px'}} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 }

@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import { MdAdd, MdEdit, MdDelete, MdLocalDrink, MdCoffee, MdFastfood, MdLiquor, MdLabel, MdFolder, MdAttachMoney, MdInventory, MdScale, MdAssignment, MdDescription, MdCheckCircle, MdCancel, MdBlock, MdFileDownload, MdNavigateBefore, MdNavigateNext, MdPictureAsPdf } from "react-icons/md";
+import { MdAdd, MdEdit, MdDelete, MdLocalDrink, MdCoffee, MdFastfood, MdLiquor, MdLabel, MdFolder, MdAttachMoney, MdInventory, MdScale, MdAssignment, MdDescription, MdCheckCircle, MdCancel, MdBlock, MdFileDownload, MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import Swal from "sweetalert2";
 import { productApi } from "../api/productApi";
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
 import "./Products.css";
 
 export default function Products() {
@@ -15,10 +13,12 @@ export default function Products() {
     name: '',
     category: 'milk',
     price: '',
+    offerPrice: '',
     stock: '',
     unit: 'liter',
     description: '',
-    status: 'available'
+    status: 'available',
+    images: []
   });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -34,14 +34,10 @@ export default function Products() {
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching products:', error);
-      // Fallback to mock data if API fails
       setProducts([
-        { _id: '1', name: "Fresh Milk", category: "milk", price: 60, stock: 50, unit: "liter", description: "Pure cow milk", status: "available", createdAt: new Date() },
-        { _id: '2', name: "Greek Yogurt", category: "dahi", price: 120, stock: 30, unit: "kg", description: "Thick creamy yogurt", status: "available", createdAt: new Date() },
-        { _id: '3', name: "Pure Ghee", category: "ghee", price: 800, stock: 20, unit: "kg", description: "Traditional clarified butter", status: "available", createdAt: new Date() },
-        { _id: '4', name: "Buttermilk", category: "buttermilk", price: 40, stock: 25, unit: "liter", description: "Fresh churned buttermilk", status: "available", createdAt: new Date() },
-        { _id: '5', name: "Paneer", category: "cheese", price: 300, stock: 15, unit: "kg", description: "Fresh cottage cheese", status: "available", createdAt: new Date() },
-        { _id: '6', name: "Heavy Cream", category: "cream", price: 150, stock: 20, unit: "liter", description: "Rich heavy cream", status: "available", createdAt: new Date() }
+        { _id: '1', name: "Fresh Milk", category: "milk", price: 60, offerPrice: 55, stock: 50, unit: "liter", description: "Pure cow milk", status: "available", images: [], createdAt: new Date() },
+        { _id: '2', name: "Greek Yogurt", category: "dahi", price: 120, offerPrice: 110, stock: 30, unit: "kg", description: "Thick creamy yogurt", status: "available", images: [], createdAt: new Date() },
+        { _id: '3', name: "Pure Ghee", category: "ghee", price: 800, offerPrice: 750, stock: 20, unit: "kg", description: "Traditional clarified butter", status: "available", images: [], createdAt: new Date() }
       ]);
     } finally {
       setLoading(false);
@@ -50,6 +46,7 @@ export default function Products() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Form data being submitted:', formData);
     
     const result = await Swal.fire({
       title: editingProduct ? 'Update Product?' : 'Add Product?',
@@ -88,10 +85,12 @@ export default function Products() {
       name: product.name,
       category: product.category,
       price: product.price.toString(),
+      offerPrice: product.offerPrice?.toString() || '',
       stock: product.stock.toString(),
       unit: product.unit,
       description: product.description || '',
-      status: product.status
+      status: product.status,
+      images: product.images || []
     });
     setShowForm(true);
   };
@@ -127,17 +126,63 @@ export default function Products() {
       name: '',
       category: 'milk',
       price: '',
+      offerPrice: '',
       stock: '',
       unit: 'liter',
       description: '',
-      status: 'available'
+      status: 'available',
+      images: []
     });
     setEditingProduct(null);
     setShowForm(false);
   };
 
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    console.log('Files selected:', files.length);
+    
+    if (files.length > 3) {
+      Swal.fire('Error!', 'You can only upload maximum 3 images', 'error');
+      return;
+    }
+    
+    if (files.length === 0) {
+      console.log('No files selected');
+      return;
+    }
+    
+    const imagePromises = files.map(file => {
+      console.log('Processing file:', file.name, file.type);
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          console.log('File loaded successfully');
+          resolve(e.target.result);
+        };
+        reader.onerror = (e) => {
+          console.error('Error reading file:', e);
+          reject(e);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+    
+    Promise.all(imagePromises)
+      .then(images => {
+        console.log('All images processed:', images.length);
+        setFormData(prev => ({...prev, images: images}));
+      })
+      .catch(error => {
+        console.error('Error processing images:', error);
+        Swal.fire('Error!', 'Failed to process images', 'error');
+      });
+  };
 
-  // download sheet
+  const removeImage = (index) => {
+    const newImages = formData.images.filter((_, i) => i !== index);
+    setFormData({...formData, images: newImages});
+  };
+
   const downloadExcel = () => {
     const csvContent = "data:text/csv;charset=utf-8," + 
       "Name,Category,Price,Stock,Unit,Description,Status\n" +
@@ -152,38 +197,6 @@ export default function Products() {
     document.body.removeChild(link);
   };
 
-
-  // download pdf
-  const downloadPDF = () => {
-    const doc = new jsPDF();
-    
-    doc.setFontSize(20);
-    doc.text('Products Report', 14, 22);
-    
-    doc.setFontSize(10);
-    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 30);
-    
-    const tableData = products.map(product => [
-      product.name,
-      product.category,
-      `₹${product.price}`,
-      product.stock,
-      product.unit,
-      product.description || '',
-      product.status
-    ]);
-    
-    doc.autoTable({
-      head: [['Name', 'Category', 'Price', 'Stock', 'Unit', 'Description', 'Status']],
-      body: tableData,
-      startY: 35,
-      styles: { fontSize: 8 },
-      headStyles: { fillColor: [102, 126, 234] }
-    });
-    
-    doc.save('products_report.pdf');
-  };
-
   const totalPages = Math.ceil(products.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentProducts = products.slice(startIndex, startIndex + itemsPerPage);
@@ -195,9 +208,6 @@ export default function Products() {
         <div className="header-actions">
           <button onClick={downloadExcel} className="download-btn">
             <MdFileDownload /> Download Excel
-          </button>
-          <button onClick={downloadPDF} className="download-btn pdf-btn">
-            <MdPictureAsPdf /> Download PDF
           </button>
           <button onClick={() => setShowForm(true)} className="add-product-btn">
             <MdAdd /> Add New Product
@@ -249,6 +259,15 @@ export default function Products() {
                   />
                 </div>
                 <div className="input-group">
+                  <label><MdAttachMoney /> Offer Price (₹)</label>
+                  <input
+                    type="number"
+                    placeholder="Enter offer price (optional)"
+                    value={formData.offerPrice}
+                    onChange={(e) => setFormData({...formData, offerPrice: e.target.value})}
+                  />
+                </div>
+                <div className="input-group">
                   <label><MdInventory /> Stock Quantity</label>
                   <input
                     type="number"
@@ -276,9 +295,9 @@ export default function Products() {
                     value={formData.status}
                     onChange={(e) => setFormData({...formData, status: e.target.value})}
                   >
-                    <option value="available"><MdCheckCircle /> Available</option>
-                    <option value="out-of-stock"><MdCancel /> Out of Stock</option>
-                    <option value="discontinued"><MdBlock /> Discontinued</option>
+                    <option value="available">Available</option>
+                    <option value="out-of-stock">Out of Stock</option>
+                    <option value="discontinued">Discontinued</option>
                   </select>
                 </div>
               </div>
@@ -290,6 +309,28 @@ export default function Products() {
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
                   rows="3"
                 />
+              </div>
+              <div className="input-group full-width">
+                <label>Product Images (Max 3)</label>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="image-upload"
+                />
+                {formData.images.length > 0 && (
+                  <div className="image-preview">
+                    {formData.images.map((image, index) => (
+                      <div key={index} className="image-item">
+                        <img src={image} alt={`Product ${index + 1}`} />
+                        <button type="button" onClick={() => removeImage(index)} className="remove-image">
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
               <div className="form-actions">
                 <button type="button" className="cancel-btn" onClick={resetForm} disabled={loading}>
@@ -314,6 +355,18 @@ export default function Products() {
       <div className="products-grid">
         {currentProducts.map((product) => (
           <div key={product._id || product.id} className="product-card">
+            {product.images && product.images.length > 0 && (
+              <div className="product-images">
+                <img src={product.images[0]} alt={product.name} className="main-image" />
+                {product.images.length > 1 && (
+                  <div className="image-thumbnails">
+                    {product.images.slice(1, 3).map((image, index) => (
+                      <img key={index} src={image} alt={`${product.name} ${index + 2}`} className="thumbnail" />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
             <div className="product-header">
               <div className="product-category">
                 {product.category === 'milk' && <MdLocalDrink />}
@@ -337,7 +390,16 @@ export default function Products() {
               <h3>{product.name}</h3>
               <p className="product-description">{product.description}</p>
               <div className="product-details">
-                <div className="price">₹{product.price}/{product.unit}</div>
+                <div className="price-section">
+                  {product.offerPrice && product.offerPrice < product.price ? (
+                    <>
+                      <div className="offer-price">₹{product.offerPrice}/{product.unit}</div>
+                      <div className="original-price">₹{product.price}/{product.unit}</div>
+                    </>
+                  ) : (
+                    <div className="price">₹{product.price}/{product.unit}</div>
+                  )}
+                </div>
                 <div className="stock">Stock: {product.stock} {product.unit}s</div>
               </div>
               <div className={`product-status ${product.status}`}>

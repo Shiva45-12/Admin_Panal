@@ -9,11 +9,12 @@ import Support from "./Support";
 import Profile from "./Profile";
 import Store from "./Store";
 import Payment from "./Payment";
+import DeliveryBoy from "./DeliveryBoy";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import API from "../api/axios";
 import Swal from "sweetalert2";
-import logo from '../assets/logo.jpeg';
+
 
 import {
     MdDashboard,
@@ -40,6 +41,7 @@ import {
     MdPerson,
     MdStore,
     MdPayment,
+    MdDeliveryDining,
     MdAttachMoney
 } from "react-icons/md";
 
@@ -102,14 +104,37 @@ const Dashboard = () => {
             const payments = JSON.parse(localStorage.getItem('payments') || '[]');
             const totalPayments = payments.reduce((sum, payment) => sum + payment.total, 0);
             
-            setStats({...res.data, totalPayments});
+            // Calculate other stats
+            const categories = ['milk', 'dahi', 'ghee', 'buttermilk', 'cheese', 'cream'];
+            const totalCategories = categories.length;
+            
+            setStats({
+                ...res.data, 
+                totalPayments,
+                totalCategories,
+                totalProducts: 15,
+                totalOrders: 25,
+                totalDeliveryBoys: 8,
+                totalStoreItems: 12
+            });
         } catch (error) {
             console.error("Failed to fetch stats:", error);
             
-            // If API fails, still calculate payments from localStorage
             const payments = JSON.parse(localStorage.getItem('payments') || '[]');
             const totalPayments = payments.reduce((sum, payment) => sum + payment.total, 0);
-            setStats({totalPayments});
+            
+            setStats({
+                totalUsers: 0,
+                activeUsers: 0,
+                inactiveUsers: 0,
+                totalAdmins: 0,
+                totalPayments,
+                totalCategories: 6,
+                totalProducts: 15,
+                totalOrders: 25,
+                totalDeliveryBoys: 8,
+                totalStoreItems: 12
+            });
         }
     };
 
@@ -228,15 +253,7 @@ const Dashboard = () => {
                                     <p>Active Users</p>
                                 </div>
                             </div>
-                            <div className="stat-card">
-                                <div className="stat-icon inactive">
-                                    <MdCancel />
-                                </div>
-                                <div className="stat-info">
-                                    <h3>{stats.inactiveUsers || 0}</h3>
-                                    <p>Inactive Users</p>
-                                </div>
-                            </div>
+
                             <div className="stat-card">
                                 <div className="stat-icon admin">
                                     <MdSupervisorAccount />
@@ -253,6 +270,51 @@ const Dashboard = () => {
                                 <div className="stat-info">
                                     <h3>₹{stats.totalPayments || 0}</h3>
                                     <p>Total Payments</p>
+                                </div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-icon category">
+                                    <MdCategory />
+                                </div>
+                                <div className="stat-info">
+                                    <h3>{stats.totalCategories || 0}</h3>
+                                    <p>Total Categories</p>
+                                </div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-icon product">
+                                    <MdInventory />
+                                </div>
+                                <div className="stat-info">
+                                    <h3>{stats.totalProducts || 0}</h3>
+                                    <p>Total Products</p>
+                                </div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-icon order">
+                                    <MdShoppingCart />
+                                </div>
+                                <div className="stat-info">
+                                    <h3>{stats.totalOrders || 0}</h3>
+                                    <p>Total Orders</p>
+                                </div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-icon delivery">
+                                    <MdDeliveryDining />
+                                </div>
+                                <div className="stat-info">
+                                    <h3>{stats.totalDeliveryBoys || 0}</h3>
+                                    <p>Delivery Boys</p>
+                                </div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-icon store">
+                                    <MdStore />
+                                </div>
+                                <div className="stat-info">
+                                    <h3>{stats.totalStoreItems || 0}</h3>
+                                    <p>Store Items</p>
                                 </div>
                             </div>
                         </div>
@@ -383,6 +445,8 @@ const Dashboard = () => {
                 return <Store />
             case "payment":
                 return <Payment onPaymentUpdate={refreshDashboard} />
+            case "deliveryboy":
+                return <DeliveryBoy />
             default:
                 return (
                     <div>
@@ -414,17 +478,7 @@ const Dashboard = () => {
                 />
             )}
             <div className='sidebar' style={{ zIndex: 1000 }}>
-                <div className="sidebar-header">
-                    <div className="logo-section">
-                        <img src={logo} alt="Logo" className="sidebar-logo" />
-                        {/* sidebarOpen &&  */}
-                    </div>
-                    {sidebarOpen && (
-                        <button className="sidebar-close" onClick={toggleSidebar}>
-                            <MdClose />
-                        </button>
-                    )}
-                </div>
+               
                 <nav className="sidebar-nav">
                     <ul>
                         <li className={activepage === "dashboard" ? "active" : ""}>
@@ -439,10 +493,10 @@ const Dashboard = () => {
                                 {sidebarOpen && <span>Users</span>}
                             </a>
                         </li>
-                        <li className={activepage === "orders" ? "active" : ""}>
-                            <a href="#orders" onClick={() => setActivePage("orders")}>
-                                <MdShoppingCart />
-                                {sidebarOpen && <span>Orders</span>}
+                         <li className={activepage === "products" ? "active" : ""}>
+                            <a href="#products" onClick={() => setActivePage("products")}>
+                                <MdInventory />
+                                {sidebarOpen && <span>Products</span>}
                             </a>
                         </li>
                         <li className={activepage === "category" ? "active" : ""}>
@@ -451,12 +505,14 @@ const Dashboard = () => {
                                 {sidebarOpen && <span>Category</span>}
                             </a>
                         </li>
-                        <li className={activepage === "products" ? "active" : ""}>
-                            <a href="#products" onClick={() => setActivePage("products")}>
-                                <MdInventory />
-                                {sidebarOpen && <span>Products</span>}
+                        <li className={activepage === "orders" ? "active" : ""}>
+                            <a href="#orders" onClick={() => setActivePage("orders")}>
+                                <MdShoppingCart />
+                                {sidebarOpen && <span>Orders</span>}
                             </a>
                         </li>
+                        
+                       
                         <li className={activepage === "store" ? "active" : ""}>
                             <a href="#store" onClick={() => setActivePage("store")}>
                                 <MdStore />
@@ -469,7 +525,12 @@ const Dashboard = () => {
                                 {sidebarOpen && <span>Payment</span>}
                             </a>
                         </li>
-
+                        <li className={activepage === "deliveryboy" ? "active" : ""}>
+                            <a href="#deliveryboy" onClick={() => setActivePage("deliveryboy")}>
+                                <MdDeliveryDining />
+                                {sidebarOpen && <span>Delivery Boys</span>}
+                            </a>
+                        </li>
 
                         <li className={activepage === "profile" ? "active" : ""}>
                             <a href="#profile" onClick={() => setActivePage("profile")}>
@@ -496,72 +557,15 @@ const Dashboard = () => {
             <div className="main-content">
                 <header className="dashboard-header">
                     <div className="header-left">
-                        {!sidebarOpen && (
-                            <button className="menu-toggle" onClick={toggleSidebar}>
-                                <MdMenu />
-                            </button>
-                        )}
+                        <button className="menu-toggle" onClick={toggleSidebar}>
+                            <MdMenu />
+                        </button>
                         <div>
                             <h3>Welcome back, <span style={{ color: "#ff8600" }}>{user?.name || 'Admin'}</span></h3>
                             <p>Here's what's happening with your store today</p>
                         </div>
                     </div>
                     <div className="header-right">
-                        <div className="search-bar" onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}>
-                            <MdSearch className="search-icon" />
-                            <input
-                                type="text"
-                                placeholder="Search users, orders, products..."
-                                value={searchTerm}
-                                onChange={handleSearchChange}
-                            />
-                            {showSearchResults && searchResults.length > 0 && (
-                                <div className="search-results">
-                                    <div className="search-results-header">
-                                        <h4>Search Results ({searchResults.length})</h4>
-                                        <button
-                                            className="close-search"
-                                            onClick={() => setShowSearchResults(false)}
-                                        >
-                                            ✕
-                                        </button>
-                                    </div>
-                                    <div className="search-results-table">
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>Type</th>
-                                                    <th>Name</th>
-                                                    <th>Details</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {searchResults.map((result, index) => (
-                                                    <tr key={index} onClick={() => handleResultClick(result)}>
-                                                        <td>
-                                                            <span className={`result-type ${result.type}`}>
-                                                                {result.type}
-                                                            </span>
-                                                        </td>
-                                                        <td>{result.name}</td>
-                                                        <td>{result.details}</td>
-                                                        <td>
-                                                            <button className="view-btn">View</button>
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            )}
-                            {showSearchResults && searchResults.length === 0 && searchTerm.length >= 2 && (
-                                <div className="search-results">
-                                    <p>No results found for "{searchTerm}"</p>
-                                </div>
-                            )}
-                        </div>
                         <div className="theme-toggle">
                             <button 
                                 className="theme-btn" 

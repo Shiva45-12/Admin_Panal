@@ -46,6 +46,7 @@
 }
 
 /* Form Modal Styles */
+.modal-overlay,
 .user-form-overlay {
   position: fixed;
   top: 0;
@@ -60,6 +61,7 @@
   backdrop-filter: blur(5px);
 }
 
+.modal,
 .user-form-modal {
   background: white;
   border-radius: 20px;
@@ -81,6 +83,7 @@
   }
 }
 
+.modal-header,
 .form-header {
   display: flex;
   justify-content: space-between;
@@ -120,6 +123,7 @@
   transform: rotate(90deg);
 }
 
+.user-form,
 .modern-form {
   padding: 30px;
 }
@@ -131,6 +135,7 @@
   margin-bottom: 30px;
 }
 
+.form-group,
 .input-group {
   display: flex;
   flex-direction: column;

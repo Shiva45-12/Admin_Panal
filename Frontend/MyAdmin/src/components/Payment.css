@@ -6,6 +6,11 @@
 
 .payment-header {
   margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .payment-header h2 {
@@ -16,6 +21,45 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.total-payment-display {
+  display: flex;
+  gap: 15px;
+}
+
+.total-payment-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 200px;
+}
+
+.payment-icon {
+  background: #28a745;
+  color: white;
+  padding: 12px;
+  border-radius: 50%;
+  font-size: 24px;
+}
+
+.payment-info h3 {
+  margin: 0;
+  color: #28a745;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.payment-info p {
+  margin: 0;
+  color: #718096;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .payment-content {
@@ -366,6 +410,19 @@
 
 .dark-theme .payment-header h2 {
   color: white;
+}
+
+.dark-theme .total-payment-card {
+  background: #000000;
+  border-color: #333;
+}
+
+.dark-theme .payment-info h3 {
+  color: #28a745;
+}
+
+.dark-theme .payment-info p {
+  color: #ccc;
 }
 
 .dark-theme .products-section h3,

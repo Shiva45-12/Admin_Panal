@@ -39,7 +39,7 @@ export default function Login() {
           <div className="login-header">
             <img src={logo} alt="Logo" className="login-logo" />
             <h1 className="login-title">The Quick Point</h1>
-            <p className="login-subtitle">Dairy Store Admin Panel</p>
+           
           </div>
           
           <h2>Admin Login</h2>
