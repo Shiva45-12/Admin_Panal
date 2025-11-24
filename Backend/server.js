@@ -1,13 +1,16 @@
 import app from "./app.js";
 import { connectDB } from "./config/db.js";
 
-const PORT = process.env.PORT || 5000;
+import dotenv from "dotenv";
+dotenv.config();
+const PORT = process.env.PORT;
+console.log(PORT)
 
 connectDB().then(() => {
   console.log('✅ Database connected successfully');
 }).catch((err) => {
-  console.error('❌ Database connection failed:', err);
-  process.exit(1);
+  console.error('❌ Database connection failed:', err.message);
+  console.log('⚠️ Server will continue without database');
 });
 
 app.listen(PORT, () => {

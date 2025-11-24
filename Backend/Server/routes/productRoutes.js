@@ -1,15 +1,12 @@
 import express from 'express';
 import { getProducts, createProduct, updateProduct, deleteProduct } from '../controllers/productController.js';
-import auth from '../middlewares/auth.js';
+import { authenticateToken } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-// All routes require authentication
-router.use(auth);
-
-router.get('/', getProducts);
-router.post('/', createProduct);
-router.put('/:id', updateProduct);
-router.delete('/:id', deleteProduct);
+router.get('/', authenticateToken, getProducts);
+router.post('/', authenticateToken, createProduct);
+router.put('/:id', authenticateToken, updateProduct);
+router.delete('/:id', authenticateToken, deleteProduct);
 
 export default router;

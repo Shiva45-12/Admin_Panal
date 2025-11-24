@@ -10,9 +10,9 @@ const initAdmin = async () => {
     const existingAdmin = await Admin.findOne({ email: "admin@admin.com" });
     
     if (existingAdmin) {
-      console.log("✅ Default admin already exists");
-      console.log("📧 Email: admin@admin.com");
-      console.log("🔑 Password: admin123");
+      // console.log("✅ Default admin already exists");
+      // console.log("📧 Email: admin@admin.com");
+      // console.log("🔑 Password: admin123");
       return;
     }
 
@@ -24,12 +24,12 @@ const initAdmin = async () => {
     });
 
     await admin.save();
-    console.log("✅ Default admin created successfully!");
-    console.log("📧 Email: admin@admin.com");
-    console.log("🔑 Password: admin123");
+    // console.log("✅ Default admin created successfully!");
+    // console.log("📧 Email: admin@admin.com");
+    // console.log("🔑 Password: admin123");
     
   } catch (error) {
-    console.error("❌ Error:", error.message);
+    // console.error("❌ Error:", error.message);
   } finally {
     mongoose.connection.close();
   }
