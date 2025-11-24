@@ -118,7 +118,7 @@ const Dashboard = () => {
                 totalStoreItems: 12
             });
         } catch (error) {
-            console.error("Failed to fetch stats:", error);
+            // console.error("Failed to fetch stats:", error);
             
             const payments = JSON.parse(localStorage.getItem('payments') || '[]');
             const totalPayments = payments.reduce((sum, payment) => sum + payment.total, 0);
@@ -144,7 +144,7 @@ const Dashboard = () => {
             setAllActivities(res.data);
             setRecentActivities(res.data.slice(0, 5));
         } catch (error) {
-            console.error("Failed to fetch activities:", error);
+            // console.error("Failed to fetch activities:", error);
         }
     };
 
@@ -153,7 +153,7 @@ const Dashboard = () => {
             const res = await API.get("/admin/chart-data");
             setChartData(res.data);
         } catch (error) {
-            console.error("Failed to fetch chart data:", error);
+            // console.error("Failed to fetch chart data:", error);
         }
     };
 
@@ -175,7 +175,7 @@ const Dashboard = () => {
             setSearchResults(res.data);
             setShowSearchResults(true);
         } catch (error) {
-            console.error("Search failed:", error);
+            // console.error("Search failed:", error);
             setSearchResults([]);
         }
     };

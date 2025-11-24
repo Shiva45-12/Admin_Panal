@@ -2,6 +2,7 @@
   padding: 30px;
   background: #f8fafc;
   min-height: 100vh;
+  margin-top: 10px;
 }
 
 .payment-header {
@@ -11,6 +12,10 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 20px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .payment-header h2 {
@@ -406,6 +411,11 @@
 .dark-theme .payment-container {
   background: #000000;
   color: white;
+}
+
+.dark-theme .payment-header {
+  background: #000000;
+  box-shadow: 0 2px 4px rgba(255,255,255,0.1);
 }
 
 .dark-theme .payment-header h2 {

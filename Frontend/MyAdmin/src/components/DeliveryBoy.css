@@ -2,6 +2,7 @@
   padding: 30px;
   background: #f8fafc;
   min-height: 100vh;
+  margin-top: 10px;
 }
 
 .delivery-header {
@@ -9,6 +10,10 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .delivery-header h2 {
@@ -467,6 +472,11 @@
 .dark-theme .delivery-container {
   background: #000000;
   color: white;
+}
+
+.dark-theme .delivery-header {
+  background: #000000;
+  box-shadow: 0 2px 4px rgba(255,255,255,0.1);
 }
 
 .dark-theme .delivery-header h2 {

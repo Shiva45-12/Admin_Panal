@@ -728,7 +728,13 @@
   color: white;
 }
 
-.dark-theme .dashboard-header,
+.dark-theme .dashboard-header {
+  background: #000000;
+  color: white;
+  border-color: #333;
+  box-shadow: 0 2px 4px rgba(255,255,255,0.1);
+}
+
 .dark-theme .stat-card,
 .dark-theme .chart-container,
 .dark-theme .activity-container,

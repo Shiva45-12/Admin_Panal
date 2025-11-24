@@ -2,14 +2,21 @@
   padding: 30px;
   background: #f8fafc;
   min-height: 100vh;
+  margin-top: 10px;
 }
+
+
+
 
 .users-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  padding: 0 10px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .users-header h2 {
@@ -348,6 +355,11 @@
 .dark-theme .users-container {
   background: #000000;
   color: white;
+}
+
+.dark-theme .users-header {
+  background: #000000;
+  box-shadow: 0 2px 4px rgba(255,255,255,0.1);
 }
 
 .dark-theme .users-header h2 {

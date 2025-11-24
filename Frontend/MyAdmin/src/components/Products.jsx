@@ -33,7 +33,7 @@ export default function Products() {
       const response = await productApi.getAll();
       setProducts(response.data);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      // console.error('Error fetching products:', error);
       setProducts([
         { _id: '1', name: "Fresh Milk", category: "milk", price: 60, offerPrice: 55, stock: 50, unit: "liter", description: "Pure cow milk", status: "available", images: [], createdAt: new Date() },
         { _id: '2', name: "Greek Yogurt", category: "dahi", price: 120, offerPrice: 110, stock: 30, unit: "kg", description: "Thick creamy yogurt", status: "available", images: [], createdAt: new Date() },
@@ -46,7 +46,7 @@ export default function Products() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form data being submitted:', formData);
+    // console.log('Form data being submitted:', formData);
     
     const result = await Swal.fire({
       title: editingProduct ? 'Update Product?' : 'Add Product?',
@@ -71,7 +71,7 @@ export default function Products() {
         fetchProducts();
         resetForm();
       } catch (error) {
-        console.error('Error saving product:', error);
+        // console.error('Error saving product:', error);
         Swal.fire('Error!', 'Failed to save product. Please try again.', 'error');
       } finally {
         setLoading(false);
@@ -113,7 +113,7 @@ export default function Products() {
         Swal.fire('Deleted!', 'Product has been deleted successfully.', 'success');
         fetchProducts();
       } catch (error) {
-        console.error('Error deleting product:', error);
+        // console.error('Error deleting product:', error);
         Swal.fire('Error!', 'Failed to delete product. Please try again.', 'error');
       } finally {
         setLoading(false);
@@ -139,7 +139,7 @@ export default function Products() {
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    console.log('Files selected:', files.length);
+    // console.log('Files selected:', files.length);
     
     if (files.length > 3) {
       Swal.fire('Error!', 'You can only upload maximum 3 images', 'error');
@@ -147,20 +147,20 @@ export default function Products() {
     }
     
     if (files.length === 0) {
-      console.log('No files selected');
+      // console.log('No files selected');
       return;
     }
     
     const imagePromises = files.map(file => {
-      console.log('Processing file:', file.name, file.type);
+      // console.log('Processing file:', file.name, file.type);
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
-          console.log('File loaded successfully');
+          // console.log('File loaded successfully');
           resolve(e.target.result);
         };
         reader.onerror = (e) => {
-          console.error('Error reading file:', e);
+          // console.error('Error reading file:', e);
           reject(e);
         };
         reader.readAsDataURL(file);
@@ -169,11 +169,11 @@ export default function Products() {
     
     Promise.all(imagePromises)
       .then(images => {
-        console.log('All images processed:', images.length);
+        // console.log('All images processed:', images.length);
         setFormData(prev => ({...prev, images: images}));
       })
       .catch(error => {
-        console.error('Error processing images:', error);
+        // console.error('Error processing images:', error);
         Swal.fire('Error!', 'Failed to process images', 'error');
       });
   };

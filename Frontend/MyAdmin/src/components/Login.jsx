@@ -18,14 +18,14 @@ export default function Login() {
     setError("");
 
     try {
-      console.log('Attempting login with:', { email: form.email });
+      // console.log('Attempting login with:', { email: form.email });
       const res = await API.post("http://localhost:5000/api/admin/login", form);
-      console.log('Login response:', res.data);
+      // console.log('Login response:', res.data);
       login(res.data);
       navigate("/dashboard");
     } catch (err) {
-      console.error('Login error:', err.message);
-      console.error('Error response:', err.response);
+      // console.error('Login error:', err.message);
+      // console.error('Error response:', err.response);
       setError(err.response?.data?.message || err.message || "Login failed");
     } finally {
       setLoading(false);

@@ -25,12 +25,12 @@ export default function Users({ onDataChange }) {
 
   const fetchUsers = async () => {
     try {
-      console.log('Fetching users...');
+      // console.log('Fetching users...');
       const res = await API.get("/admin/users");
-      console.log('Users fetched:', res.data);
+      // console.log('Users fetched:', res.data);
       setUsers(res.data);
     } catch (error) {
-      console.error("Failed to fetch users:", error);
+      // console.error("Failed to fetch users:", error);
       alert('Failed to fetch users. Please check if the server is running.');
     } finally {
       setLoading(false);
@@ -63,7 +63,7 @@ export default function Users({ onDataChange }) {
         if (onDataChange) onDataChange();
         resetForm();
       } catch (error) {
-        console.error("Failed to save user:", error);
+        // console.error("Failed to save user:", error);
         Swal.fire('Error!', error.response?.data?.message || 'Failed to save user', 'error');
       }
     }
@@ -97,7 +97,7 @@ export default function Users({ onDataChange }) {
         fetchUsers();
         if (onDataChange) onDataChange();
       } catch (error) {
-        console.error("Failed to delete user:", error);
+        // console.error("Failed to delete user:", error);
         Swal.fire('Error!', 'Failed to delete user', 'error');
       }
     }
@@ -124,7 +124,7 @@ export default function Users({ onDataChange }) {
         fetchUsers();
         if (onDataChange) onDataChange();
       } catch (error) {
-        console.error("Failed to update user status:", error);
+        // console.error("Failed to update user status:", error);
         Swal.fire('Error!', 'Failed to update user status', 'error');
       }
     }

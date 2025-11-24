@@ -47,7 +47,7 @@ const Profile = () => {
         Swal.fire('Updated!', 'Profile updated successfully.', 'success');
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
+      // console.error('Error updating profile:', error);
       Swal.fire('Error!', 'Failed to update profile.', 'error');
     }
   };
@@ -115,7 +115,7 @@ const Profile = () => {
         });
         Swal.fire('Success!', 'Password changed successfully.', 'success');
       } catch (error) {
-        console.error('Error changing password:', error);
+        // console.error('Error changing password:', error);
         Swal.fire('Error!', error.response?.data?.message || 'Failed to change password.', 'error');
       }
     }
