@@ -27,16 +27,16 @@ const testLogin = async () => {
     const isMatch = await bcrypt.compare(testPassword, admin.password);
     
     if (isMatch) {
-      console.log("✅ Password verification: SUCCESS");
-      console.log("🎉 Login should work with:");
-      console.log("   Email: admin@admin.com");
-      console.log("   Password: admin123");
+      // console.log(" Password verification: SUCCESS");
+      // console.log(" Login should work with:");
+      // console.log("  Email: admin@admin.com");
+      // console.log("  Password: admin123");
     } else {
-      console.log("❌ Password verification: FAILED");
-      console.log("🔧 Password hash issue detected");
+      // console.log(" Password verification: FAILED");
+      // console.log(" Password hash issue detected");
       
       // Try to fix by recreating admin with proper hash
-      console.log("🔄 Recreating admin with proper hash...");
+      // console.log("Recreating admin with proper hash...");
       await Admin.deleteOne({ email: "admin@admin.com" });
       
       const newAdmin = new Admin({
@@ -46,7 +46,7 @@ const testLogin = async () => {
       });
       
       await newAdmin.save();
-      console.log("✅ Admin recreated successfully!");
+      console.log("Admin recreated successfully!");
     }
     
   } catch (error) {

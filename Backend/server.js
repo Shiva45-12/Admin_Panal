@@ -7,10 +7,10 @@ const PORT = process.env.PORT;
 console.log(PORT)
 
 connectDB().then(() => {
-  console.log('✅ Database connected successfully');
+  console.log(' Database connected successfully');
 }).catch((err) => {
-  console.error('❌ Database connection failed:', err.message);
-  console.log('⚠️ Server will continue without database');
+  console.error(' Database connection failed:', err.message);
+  console.log(' Server will continue without database');
 });
 
 app.listen(PORT, () => {
