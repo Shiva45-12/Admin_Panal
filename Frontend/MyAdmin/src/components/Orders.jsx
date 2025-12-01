@@ -376,7 +376,7 @@ export default function Orders() {
                     <option value="Paneer">Paneer</option>
                     <option value="Heavy Cream">Heavy Cream</option>
                   </select>
-                  
+
                 </div>
                 <div className="input-group">
                   <label>Quantity</label>
